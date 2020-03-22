@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html class="insetting">
+<head>
+	<meta charset="UTF-8">
+	<title>Face Croppers</title>
+	<link rel="stylesheet" type="text/css" href="dev/style.css">
+	<link rel="shortcut icon" href="pics/favicon.png">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="apple-touch-icon" sizes="120x120" href="pics/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="pics/apple-touch-icon-152x152.png">
+	<script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
+	<meta name="viewport" content="width=device-width">
+	<script src="dev/FileSaver.min.js"></script>
+	<style>
+	  input[type=range] {
+			-webkit-appearance: none;
+			width: 100%;
+			margin: 7.3px 0;
+		}
+		input[type=range]:focus {
+			outline: none;
+		}
+		input[type=range]::-webkit-slider-runnable-track {
+			width: 100%;
+			height: 11.4px;
+			cursor: pointer;
+			box-shadow: 0px 0px 1px #2ad400, 0px 0px 0px #2fee00;
+			background: rgba(35, 113, 169, 0.78);
+			border-radius: 1.3px;
+			border: 0.2px solid #010101;
+		}
+		input[type=range]::-webkit-slider-thumb {
+			box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;
+			border: 1.8px solid #00001e;
+			height: 26px;
+			width: 26px;
+			border-radius: 15px;
+			background: rgba(238, 237, 240, 0.95);
+			cursor: pointer;
+			-webkit-appearance: none;
+			margin-top: -7.5px;
+		}
+		input[type=range]:focus::-webkit-slider-runnable-track {
+			background: rgba(39, 127, 190, 0.78);
+		}
+		input[type=range]::-moz-range-track {
+			width: 100%;
+			height: 11.4px;
+			cursor: pointer;
+			box-shadow: 0px 0px 1px #2ad400, 0px 0px 0px #2fee00;
+			background: rgba(35, 113, 169, 0.78);
+			border-radius: 1.3px;
+			border: 0.2px solid #010101;
+		}
+		input[type=range]::-moz-range-thumb {
+			box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;
+			border: 1.8px solid #00001e;
+			height: 26px;
+			width: 26px;
+			border-radius: 15px;
+			background: rgba(238, 237, 240, 0.95);
+			cursor: pointer;
+		}
+		input[type=range]::-ms-track {
+			width: 100%;
+			height: 11.4px;
+			cursor: pointer;
+			background: transparent;
+			border-color: transparent;
+			color: transparent;
+		}
+		input[type=range]::-ms-fill-lower {
+			background: rgba(31, 99, 148, 0.78);
+			border: 0.2px solid #010101;
+			border-radius: 2.6px;
+			box-shadow: 0px 0px 1px #2ad400, 0px 0px 0px #2fee00;
+		}
+		input[type=range]::-ms-fill-upper {
+			background: rgba(35, 113, 169, 0.78);
+			border: 0.2px solid #010101;
+			border-radius: 2.6px;
+			box-shadow: 0px 0px 1px #2ad400, 0px 0px 0px #2fee00;
+		}
+		input[type=range]::-ms-thumb {
+			box-shadow: 0.9px 0.9px 1px #000031, 0px 0px 0.9px #00004b;
+			border: 1.8px solid #00001e;
+			height: 26px;
+			width: 26px;
+			border-radius: 15px;
+			background: rgba(238, 237, 240, 0.95);
+			cursor: pointer;
+			height: 11.4px;
+		}
+		input[type=range]:focus::-ms-fill-lower {
+			background: rgba(35, 113, 169, 0.78);
+		}
+		input[type=range]:focus::-ms-fill-upper {
+			background: rgba(39, 127, 190, 0.78);
+		}
+
+	</style>
+</head>
+<body>
+	<div class="main">
+		<!-- <header class="fade-content"> -->
+		 <!-- <a href="http://bennettfeely.com/clippy">CSS clip-path maker</a> <a href="https://twitter.com/share" class="twitter-share-button" data-via="bennettfeely">Tweet</a> -->
+		 <!-- <script>!function (t, e, r) { var n, s = t.getElementsByTagName(e)[0], i = /^http:/.test(t.location) ? "http" : "https"; t.getElementById(r) || (n = t.createElement(e), n.id = r, n.src = i + "://platform.twitter.com/widgets.js", s.parentNode.insertBefore(n, s)) }(document, "script", "twitter-wjs");</script> -->
+		<!-- </header> -->
+	  <div style="backround-color:white">
+	  	<input type="file" id="fileInput" hidden accept="image/gif, image/jpeg, image/png" onchange="onFileChoose(this)"/>
+			<button id="upbtn" value="Choose"  class="w3-button w3-ripple w3-red" onclick="fakeClick()">Choose From Computer</button>
+			<button id="webbtn" value="Take Photo"  class="w3-button w3-ripple w3-red" onclick="showCam()">Take Photo</button>
+			<button id="capbtn" value="Capture" style="display:none"  class="w3-button w3-ripple w3-red" onclick="take_snapshot()">Capture</button>
+			<button id="savebtn" value="Save"  class="w3-button w3-ripple w3-red" onclick="saveImage()">Save</button>
+	  </div>
+	  
+    <div class="demo-container fade-content">
+    	<section class="demo">
+				<div id="my_camera"></div>
+				<div id="box" class="box">
+					<div class="shadowboard" ></div>
+					<div id="element0b" style="background-color:black;height:356px;width:356px;position:absolute">
+						<div class="clipboard" id="element0"></div>
+					</div>            
+					<div class="handles"></div>
+				</div>
+				<!-- <div class="custom-notice"> -->
+					 <!-- <div><span class="touchy"></span> to add points<br>to custom polygon.</div> -->
+				<!-- </div> -->
+      </section>
+    </div>
+		<section class="dark-panel custom">
+		 	<h2>Custom shape</h2>
+		 	<button class="finish"></button>
+		</section>
+		<section class="dark-panel inset">
+			<div class="flex">
+				<h2>Round edges</h2>
+				<input value="5% 20% 0 10%" class="inset-round" type="text">
+		 	</div>
+		 	<p>The <code>inset()</code> shape optionally allows values similar to <code>border-radius</code> for rounded edges. This new feature may be buggy in <span class="your-browser">your browser</span>.</p>
+		</section>
+		<section hidden id="flickity" style="display:none" class="shapes horizontal gallery">
+			<ul></ul>
+		</section>
+		<section class="clip-path" tabindex="-1" style="display:none">
+			<div class="css-code code fade-content"><code class="webkit block show">-webkit-clip-path: <span class="functions"></span>;</code> <code class="unprefixed block show">clip-path: <span class="functions"></span>;</code></div>
+			<button class="edit-in-codepen code"></button>
+		</section>
+	</div>
+  <div class="side">
+		<div class="slidecontainer">
+			<div>
+				<h4>Resize Image</h4>
+				<input type="range" id="sizeSlider" min="280" max="840" value="350" oninput="resizeImage(this.value)" onchange="resizeImage(this.value)" onkeypress="resizeImage(this.value)" onmousedown="resizeImage(this.value)" omousepress="resizeImage(this.value)"/>
+			</div>
+			<br/>
+			<div>
+				<h4>Rotation</h4>
+				<input type="range" id="rotateSlider" min="0" max="360" value="0" onchange="rotateImage(this.value)" oninput="rotateImage(this.value)"/>
+			</div>
+			<br/>
+			<div>
+				<h4>Brightness</h4>
+				<input type="range" id="brightSlider" min="0" max="30" value="10" onchange="brightImage(this.value)" oninput="brightImage(this.value)"/>
+			</div>
+			<div id="canvasDiv">
+				<canvas id="myCanvas" width=350 height=350></canvas>
+			</div>
+			<image id="theimage"></image>
+		</div>
+  </div>
+  
+	<style id="custom_background"></style>
+	<style id="custom_canvas"></style>
+	<style id="custom_bright"></style>
+	<style id="custom_resize"></style>
+	<style id="custom_rotate"></style>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="dev/draggabilly.min.js"></script>
+	<script src="dev/flickity.pkgd.min.js"></script>
+	<script src="dev/clip.js"></script>
+	<script src="dev/webcam.min.js"></script>
+	<script>
+		function onFileChoose(input){
+			console.log("file choose");
+			if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+			var s = e.target.result;
+			setCustomBackground(s);
+			//setCustomBackgroundCanvas(s)
+			//.width(150)
+			//.height(200);
+			};
+
+			console.log( reader.readAsDataURL(input.files[0]));
+			//$('#shadowboard')
+			//      .css('background-image',reader.readAsDataURL(input.files[0]));
+			}
+		}
+
+		function resizeImage(val) {
+			resize = val;				
+			setCustomResize();
+		}
+		function rotateImage(val) {
+			rotate = val;				
+			setCustomRotate();
+		}
+
+		function brightImage(val) {
+			bright = val;				
+			setCustomBright();
+		}
+
+		function showCam() {
+			Webcam.set({
+				width: 640,
+				height: 480,
+				dest_width: 640,
+				dest_height: 480,
+				image_format: 'jpeg',
+				jpeg_quality: 100,
+			});
+			Webcam.attach( '#my_camera' );
+
+			$("#box").hide();
+			$('#my_camera').show();
+			$('#webbtn').hide();
+			$('#capbtn').show();
+		}
+		function fakeClick() {
+			$("#fileInput").click();
+		}
+		function take_snapshot() {
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				// display results in page
+				//document.getElementById('results').innerHTML =
+				// $('#blah')[0].src = data_uri;
+				setCustomBackground(data_uri);
+				Webcam.reset();
+				$("#box").show();
+				$('#my_camera').hide();
+				$('#webbtn').show();
+				$('#capbtn').hide();
+			});
+		}
+		function saveImage() {
+			mydiv = document.getElementById('canvasDiv');
+			while (mydiv.firstChild) {
+				mydiv.removeChild(mydiv.firstChild);
+			}
+
+			$("#canvasDiv").html("<canvas id='myCanvas' width=350 height=350></canvas>");
+			// ctx.resetTransform();
+			var c=document.getElementById("myCanvas");
+			var ctx=c.getContext("2d");
+			// Store the current transformation matrix
+			ctx.save();
+
+			// Use the identity matrix while clearing the canvas
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+			ctx.clearRect(0, 0, 350, 350);
+
+			// Restore the transform
+			ctx.restore();
+
+			var img = new Image();
+			img.src = image;
+			//   var img=$("#element0").css("background-image");
+			var factor = resize/img.width;
+
+			//origin calculation 
+			var target_size = 350;
+			x= (target_size-img.width*(factor))/2;
+			y= (target_size-img.height*(factor))/2;
+			//w= Math.min( img.width*(factor),target_size);
+			//h= Math.min( img.height*(factor),target_size);
+			w= img.width*(factor);
+			h = img.height*(factor);
+
+			console.log(x);
+			console.log(y);
+			console.log(img.width);
+			console.log(img.height);
+
+			ctx.translate(175,175);
+			var changeRotate  =  rotate-protate;
+			ctx.rotate(Math.PI / 180 * (rotate));
+			// Move registration point back to the top left corner of canvas
+			ctx.translate(-175, -175);
+
+			var pply = $("#element0").css("clip-path");
+			pply= pply.match(/\(([^)]+)\)/)[1];
+			pply = pply.replace("(","");
+			pply = pply.replace(")","");
+			var arr = pply.split(", ");
+
+			ctx.beginPath ();
+			
+			for(var t = 0; t<arr.length; t++) {
+				var pp = arr[t].split(" ");
+				var a = pp[0].replace("%","");
+				var b = pp[1].replace("%","");
+				a= target_size * a/100;
+				b= target_size * b/100;
+				console.log("t: "+t +"   a: " + a + " ---  b:"+b);
+
+				if(t==0)
+					ctx.moveTo (a,b);
+				else
+					ctx.lineTo (a,b);
+
+			}
+
+			ctx.clip ();
+			ctx.closePath ();
+			ctx.filter = 'brightness('+bright/10+')'
+			//ctx.globalAlpha= bright;
+			ctx.drawImage(img,x,y,w,h);
+			ctx.rotate(-rotate); 
+
+			to_image();
+		}
+		
+		function to_image() {
+			var canvas = document.getElementById("myCanvas");
+			document.getElementById("theimage").src = canvas.toDataURL();
+			//   Canvas2Image.saveAsPNG(canvas);
+			canvas.toBlob(function(blob) {
+			saveAs(blob, "image.png");
+			});
+		}
+	</script>
+
+	<!-- <script src="clip.min.js"></script> -->
+	<script>    !function (e, n, t, a, c, o, s) { e.GoogleAnalyticsObject = c, e[c] = e[c] || function () { (e[c].q = e[c].q || []).push(arguments) }, e[c].l = 1 * new Date, o = n.createElement(t), s = n.getElementsByTagName(t)[0], o.async = 1, o.src = a, s.parentNode.insertBefore(o, s) }(window, document, "script", "http://www.google-analytics.com/analytics.js", "ga"), ga("create", "UA-35724550-1", "bennettfeely.com"), ga("send", "pageview");</script>
+</body>				
+</html>
