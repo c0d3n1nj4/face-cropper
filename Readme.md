@@ -10,3 +10,5 @@
 - Brightness
 
 *** Clicking Save will download the edited image to your machine ***
+
+![Screenshot](Screenshot.jpg)
